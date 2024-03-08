@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String        @db.VarChar(30)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  projectUsers ProjectUser[]
+  taskUsers    TaskUser[]
+  taskComments TaskComment[]
+
+  @@map("users")
+}
+
+model Project {
+  id             String         @id @default(uuid())
+  name           String         @db.VarChar(48)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now())
+  projectUsers   ProjectUser[]
+  tasks          Task[]
+  taskStatuses   TaskStatus[]
+  taskPriorities TaskPriority[]
+
+  @@map("projects")
+}
+
+model ProjectUser {
+  projectId String      @map("project_id")
+  userId    String      @map("user_id")
+  roleId    String      @map("role_id")
+  project   Project     @relation(fields: [projectId], references: [id])
+  user      User        @relation(fields: [userId], references: [id])
+  role      ProjectRole @relation(fields: [roleId], references: [id])
+
+  @@id([projectId, userId])
+  @@unique([projectId, userId])
+  @@map("project_users")
+}
+
+model ProjectRole {
+  id           String        @id @default(uuid())
+  role         String        @unique @db.VarChar(20)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  projectUsers ProjectUser[]
+
+  @@map("project_roles")
+}
+
+model Task {
+  id           String        @id @default(uuid())
+  projectId    String        @map("project_id")
+  name         String        @db.VarChar(60)
+  dueDate      DateTime?     @map("due_date")
+  statusId     String?       @map("status_id")
+  priorityId   String?       @map("priority_id")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  project      Project       @relation(fields: [projectId], references: [id])
+  status       TaskStatus?   @relation(fields: [statusId], references: [id])
+  priority     TaskPriority? @relation(fields: [priorityId], references: [id])
+  taskUsers    TaskUser[]
+  taskComments TaskComment[]
+
+  @@map("tasks")
+}
+
+model TaskStatus {
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  status    String   @unique @db.VarChar(20)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+  tasks     Task[]
+
+  @@map("task_statuses")
+}
+
+model TaskPriority {
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  name      String   @db.VarChar(30)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+  tasks     Task[]
+
+  @@map("task_priorities")
+}
+
+model TaskUser {
+  taskId    String   @map("task_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([taskId, userId])
+  @@unique([taskId, userId])
+  @@map("task_users")
+}
+
+model TaskComment {
+  id        String   @id @default(uuid())
+  taskId    String   @map("task_id")
+  userId    String   @map("user_id")
+  content   String   @db.VarChar(512)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("task_comments")
+}
