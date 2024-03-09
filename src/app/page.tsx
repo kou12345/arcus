@@ -1,10 +1,12 @@
 import { UserButton } from "@clerk/nextjs";
-import Image from "next/image";
+import { serverApi } from "./_trpc/server-api";
 
-export default function Home() {
+export default async function Home() {
+  const hello = await serverApi.hello.test();
   return (
     <div className="h-screen">
       <UserButton />
+      <div>{JSON.stringify(hello)}</div>
     </div>
   );
 }
