@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <ClerkProvider>
-        <body className={`${inter.className} min-h-screen flex flex-col p-2`}>
+        <body className={`${inter.className} min-h-screen flex flex-col p-4`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -29,7 +29,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Header />
-            <main className="flex-grow p-4">{children}</main>
+            <main className="flex-grow my-4">{children}</main>
             <Footer />
           </ThemeProvider>
         </body>
