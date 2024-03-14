@@ -12,10 +12,7 @@ export const newProject = async (formData: FormData) => {
   // ログイン
   const user = await getAuthenticatedUser();
 
-  const projectName = formData.get("project_name");
-  console.log(projectName);
-
-  const validate = newProjectRequest.safeParse({ projectName });
+  const validate = newProjectRequest.safeParse({ projectName: formData.get("project_name") });
   if (!validate.success) {
     throw new Error("Invalid form data");
   }
