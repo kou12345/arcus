@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
 
 export default async function Home() {
   const invoices = [
@@ -65,9 +66,12 @@ export default async function Home() {
     <div>
       <div className="grid grid-cols-4 gap-4">
         <p>Projects</p>
-        <Button className="col-start-4" size="sm">
-          new project
-        </Button>
+        <Link
+          href="/new"
+          className={`${buttonVariants({ size: "sm" })} col-start-4`}
+        >
+          New Project
+        </Link>
       </div>
       <Table className="mt-2">
         <TableCaption>A list of your recent projects.</TableCaption>
