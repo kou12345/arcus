@@ -4,11 +4,11 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getProjects } from "@/server/actions/getProjects";
 import Link from "next/link";
 
 export default async function Home() {
@@ -62,6 +62,10 @@ export default async function Home() {
       paymentMethod: "",
     },
   ];
+
+  const projects = await getProjects();
+  console.log(projects);
+
   return (
     <div>
       <div className="grid grid-cols-4 gap-4">
@@ -84,13 +88,15 @@ export default async function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
+          {projects.map((project) => (
+            <TableRow key={project.id}>
+              <TableCell className="font-medium">
+                <Link href={`/project/${project.id}`}>{project.name}</Link>
+              </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell className="text-right">
-                {invoice.totalAmount}
+                {project.projectUsers[0].role}
               </TableCell>
             </TableRow>
           ))}
