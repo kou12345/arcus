@@ -16,8 +16,8 @@ datasource db {
 model User {
   id           String        @id @default(uuid())
   name         String        @db.VarChar(30)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @default(now())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @map("updated_at")
   projectUsers ProjectUser[]
   taskUsers    TaskUser[]
   taskComments TaskComment[]
@@ -28,8 +28,8 @@ model User {
 model Project {
   id             String         @id @default(uuid())
   name           String         @db.VarChar(48)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @default(now())
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @default(now()) @map("updated_at")
   projectUsers   ProjectUser[]
   tasks          Task[]
   taskStatuses   TaskStatus[]
@@ -42,6 +42,8 @@ model ProjectUser {
   projectId String      @map("project_id")
   userId    String      @map("user_id")
   roleId    String      @map("role_id")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @default(now()) @map("updated_at")
   project   Project     @relation(fields: [projectId], references: [id])
   user      User        @relation(fields: [userId], references: [id])
   role      ProjectRole @relation(fields: [roleId], references: [id])
@@ -54,8 +56,8 @@ model ProjectUser {
 model ProjectRole {
   id           String        @id @default(uuid())
   role         String        @unique @db.VarChar(20)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @default(now())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @map("updated_at")
   projectUsers ProjectUser[]
 
   @@map("project_roles")
@@ -68,8 +70,8 @@ model Task {
   dueDate      DateTime?     @map("due_date")
   statusId     String?       @map("status_id")
   priorityId   String?       @map("priority_id")
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @default(now())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @map("updated_at")
   project      Project       @relation(fields: [projectId], references: [id])
   status       TaskStatus?   @relation(fields: [statusId], references: [id])
   priority     TaskPriority? @relation(fields: [priorityId], references: [id])
@@ -83,8 +85,8 @@ model TaskStatus {
   id        String   @id @default(uuid())
   projectId String   @map("project_id")
   status    String   @unique @db.VarChar(20)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   project   Project  @relation(fields: [projectId], references: [id])
   tasks     Task[]
 
@@ -95,8 +97,8 @@ model TaskPriority {
   id        String   @id @default(uuid())
   projectId String   @map("project_id")
   name      String   @db.VarChar(30)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   project   Project  @relation(fields: [projectId], references: [id])
   tasks     Task[]
 
@@ -106,8 +108,8 @@ model TaskPriority {
 model TaskUser {
   taskId    String   @map("task_id")
   userId    String   @map("user_id")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   task      Task     @relation(fields: [taskId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
@@ -121,8 +123,8 @@ model TaskComment {
   taskId    String   @map("task_id")
   userId    String   @map("user_id")
   content   String   @db.VarChar(512)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   task      Task     @relation(fields: [taskId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
