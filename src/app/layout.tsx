@@ -21,16 +21,18 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <ClerkProvider>
-        <body className={`${inter.className} min-h-screen flex flex-col p-4`}>
+        <body className={`${inter.className}`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <main className="flex-grow my-4">{children}</main>
-            <Footer />
+            <div className="p-4 flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow my-4">{children}</main>
+              <Footer />
+            </div>
           </ThemeProvider>
         </body>
       </ClerkProvider>
