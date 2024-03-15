@@ -8,3 +8,8 @@ export const newTaskRequest = z.object({
   projectId: z.string().uuid(),
   taskName: z.string().min(1).max(60),
 })
+
+export const postCommentRequest = z.object({
+  taskId: z.string().uuid(),
+  comment: z.string().min(1).max(512),
+})
