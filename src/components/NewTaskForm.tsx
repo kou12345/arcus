@@ -12,7 +12,7 @@ import {
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { DatePickerWithPresets } from "./DatePickerWithPresets";
 
 type Props = {
@@ -43,6 +43,18 @@ export const NewTaskForm = (props: Props) => {
     }
   }, [state]);
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!date) {
+      alert("Please select a due date");
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    formActionWithDueDate(formData);
+    setDate(undefined);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -54,7 +66,7 @@ export const NewTaskForm = (props: Props) => {
         <DialogHeader>
           <DialogTitle>New task</DialogTitle>
         </DialogHeader>
-        <form action={formActionWithDueDate}>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <Label htmlFor="task_name">Task name</Label>
             <Input
@@ -62,11 +74,15 @@ export const NewTaskForm = (props: Props) => {
               id="task_name"
               name="task_name"
               placeholder="Task name"
-              className="my-2"
               required
+              className="my-2"
             />
-            <Label htmlFor="due_date">Due date</Label>
-            <DatePickerWithPresets date={date} setDate={setDate} />
+            <div className="flex flex-col">
+              <Label htmlFor="due_date" className="my-2">
+                Due date
+              </Label>
+              <DatePickerWithPresets date={date} setDate={setDate} />
+            </div>
           </div>
           <DialogFooter>
             <Button type="submit">Create task</Button>
