@@ -11,9 +11,15 @@ export type State = {
 
 export const newTask = async (projectId: string, _prevState: State, formData: FormData): Promise<{done: boolean}> => {
   
+  const inputDueDate = formData.get("due_date")
+  if (inputDueDate === null) {
+    throw new Error("ERROR: Invalid form data");
+  }
+
   const validate = newTaskRequest.safeParse({
     projectId,
     taskName: formData.get("task_name"),
+    dueDate: new Date(inputDueDate.toString() as string),
   });
   
   if (!validate.success) {
@@ -32,6 +38,7 @@ export const newTask = async (projectId: string, _prevState: State, formData: Fo
     projectId: validate.data.projectId,
     taskName: validate.data.taskName,
     userId: user.id,
+    dueDate: validate.data.dueDate,
   });
 
   console.log("Task created");
@@ -39,7 +46,6 @@ export const newTask = async (projectId: string, _prevState: State, formData: Fo
   return {
     done: true,
   }
-
 }
 
 const isUserInProject = async (userId: string, projectId: string) => {
@@ -73,10 +79,12 @@ const createTask = async ({
   projectId,
   taskName,
   userId,
+  dueDate,
 }: {
   projectId: string;
   taskName: string;
   userId: string;
+  dueDate: Date;
 }) => {
   try {
     const task = await db.task.create({
@@ -87,7 +95,8 @@ const createTask = async ({
           create: {
             userId: userId
           }
-        }
+        },
+        dueDate,
       }
     });
   } catch (e) {

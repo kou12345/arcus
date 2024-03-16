@@ -7,6 +7,7 @@ export const newProjectRequest = z.object({
 export const newTaskRequest = z.object({
   projectId: z.string().uuid(),
   taskName: z.string().min(1).max(60),
+  dueDate: z.date(),
 })
 
 export const postCommentRequest = z.object({
