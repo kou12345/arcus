@@ -14,8 +14,6 @@ import { db } from "@/server/db";
 import Link from "next/link";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  // TODO ProjectIdのvalidation
-
   const project = await getProjectById(params.id);
 
   const newTaskWithProjectId = newTask.bind(null, params.id);
@@ -36,7 +34,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <TableRow>
             <TableHead className="">Name</TableHead>
             <TableHead></TableHead>
-            <TableHead>Deadline</TableHead>
+            <TableHead className="text-right">Deadline</TableHead>
             <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -49,11 +47,10 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </Link>
               </TableCell>
               <TableCell></TableCell>
-              <TableCell></TableCell>
               <TableCell className="text-right">
-                {/* {task.dueDate ? "Due" : "Open"} */}
-                hoge
+                {task.dueDate ? task.dueDate.toISOString() : "No deadline"}
               </TableCell>
+              <TableCell></TableCell>
             </TableRow>
           ))}
         </TableBody>
