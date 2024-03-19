@@ -14,3 +14,14 @@ export const postCommentRequest = z.object({
   taskId: z.string().uuid(),
   comment: z.string().min(1).max(512),
 })
+
+export type Task = {
+  id: string;
+  projectId: string;
+  name: string;
+  dueDate: Date | null;
+  statusId: string | null;
+  priorityId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
