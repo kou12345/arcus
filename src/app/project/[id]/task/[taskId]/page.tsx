@@ -76,6 +76,10 @@ const getCommentsByTaskId = async (taskId: string) => {
       },
     });
 
+    if (comments.length === 0) {
+      return [];
+    }
+
     const user = await clerkClient.users.getUser(comments[0].userId);
     if (!user) {
       throw new Error("User not found");
