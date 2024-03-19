@@ -1,6 +1,7 @@
-import { UserButton } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 export const Header = () => {
   return (
@@ -9,7 +10,12 @@ export const Header = () => {
         <Link href="/" className="text-xl">
           Arcus
         </Link>
-        <UserButton />
+        <ClerkLoading>
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </ClerkLoading>
+        <ClerkLoaded>
+          <UserButton />
+        </ClerkLoaded>
       </div>
       <hr />
     </div>
