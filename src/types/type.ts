@@ -15,6 +15,11 @@ export const postCommentRequest = z.object({
   comment: z.string().min(1).max(512),
 })
 
+export const saveDeadlineRequest = z.object({
+  taskId: z.string().uuid(),
+  deadline: z.date(),
+})
+
 export type Task = {
   id: string;
   projectId: string;
