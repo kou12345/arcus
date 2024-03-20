@@ -112,7 +112,6 @@ export const TaskTable = (props: Props) => {
                       await saveDeadline(task.id, date as Date);
                       setOpenPopoverId(null);
                     }}
-                    disabled={!date}
                   >
                     Save
                   </Button>

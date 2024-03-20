@@ -33,7 +33,7 @@ export const saveDeadline = async (taskId: string, deadline: Date) => {
       id: validate.data.taskId,
     },
     data: {
-      dueDate: validate.data.deadline,
+      dueDate: validate.data.deadline ?? null,
     },
   });
 

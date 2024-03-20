@@ -17,7 +17,7 @@ export const postCommentRequest = z.object({
 
 export const saveDeadlineRequest = z.object({
   taskId: z.string().uuid(),
-  deadline: z.date(),
+  deadline: z.date().optional(),
 })
 
 export type Task = {

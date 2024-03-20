@@ -45,7 +45,9 @@ export const DatePickerWithPresets = (props: Props) => {
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
         <Select
           onValueChange={(value) =>
-            setDate(addDays(new Date(), parseInt(value)))
+            value === "clear"
+              ? setDate(undefined)
+              : setDate(addDays(new Date(), parseInt(value)))
           }
         >
           <SelectTrigger>
@@ -56,6 +58,7 @@ export const DatePickerWithPresets = (props: Props) => {
             <SelectItem value="1">Tomorrow</SelectItem>
             <SelectItem value="3">In 3 days</SelectItem>
             <SelectItem value="7">In a week</SelectItem>
+            <SelectItem value="clear">No Date</SelectItem>
           </SelectContent>
         </Select>
         <div className="rounded-md border">
