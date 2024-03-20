@@ -55,9 +55,22 @@ export const TaskTable = (props: Props) => {
     [router, props.projectId]
   );
 
-  const onOpenChange = useCallback((open: boolean, taskId: string) => {
-    setOpenPopoverId(open ? taskId : null);
-  }, []);
+  const onOpenChange = useCallback(
+    (open: boolean, taskId: string) => {
+      setOpenPopoverId(open ? taskId : null);
+      if (open) {
+        const selectedTask = props.tasks.find((task) => task.id === taskId);
+        if (selectedTask && selectedTask.dueDate) {
+          setDate(new Date(selectedTask.dueDate));
+        } else {
+          setDate(undefined);
+        }
+      } else {
+        setDate(undefined);
+      }
+    },
+    [props.tasks]
+  );
 
   return (
     <Table className="mt-2">
