@@ -1,6 +1,7 @@
 "use client";
 
 import { DatePickerWithPresets } from "@/components/DatePickerWithPresets";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -15,11 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { saveDeadline } from "@/server/actions/saveDeadline";
 import { Task } from "@/types/type";
 import { formatDate } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 type Props = {
   tasks: Task[];
@@ -29,11 +31,33 @@ type Props = {
 export const TaskTable = (props: Props) => {
   const router = useRouter();
 
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(); // deadline
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
-  const onClick = (taskId: string) => {
-    router.push(`/project/${props.projectId}/task/${taskId}`);
-  };
+  const sortedTasks = useMemo(() => {
+    return [...props.tasks].sort((a, b) => {
+      if (a.dueDate && b.dueDate) {
+        return a.dueDate.getTime() - b.dueDate.getTime();
+      } else if (a.dueDate) {
+        return -1;
+      } else if (b.dueDate) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }, [props.tasks]);
+
+  const onClick = useCallback(
+    (taskId: string) => {
+      router.push(`/project/${props.projectId}/task/${taskId}`);
+    },
+    [router, props.projectId]
+  );
+
+  const onOpenChange = useCallback((open: boolean, taskId: string) => {
+    setOpenPopoverId(open ? taskId : null);
+  }, []);
 
   return (
     <Table className="mt-2">
@@ -46,7 +70,7 @@ export const TaskTable = (props: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {props.tasks.map((task) => (
+        {sortedTasks.map((task) => (
           <TableRow key={task.id}>
             <TableCell
               className="font-medium cursor-pointer"
@@ -57,14 +81,28 @@ export const TaskTable = (props: Props) => {
               </Link>
             </TableCell>
             <TableCell className="text-right">
-              <Popover>
+              <Popover
+                open={openPopoverId === task.id}
+                onOpenChange={(open) => onOpenChange(open, task.id)}
+              >
                 <PopoverTrigger>
                   {task.dueDate
                     ? formatDate(task.dueDate, "M/d")
                     : "No deadline"}
                 </PopoverTrigger>
-                <PopoverContent>
+                <PopoverContent className="flex items-center">
                   <DatePickerWithPresets date={date} setDate={setDate} />
+                  <Button
+                    size="sm"
+                    className="ml-4"
+                    onClick={async () => {
+                      await saveDeadline(task.id, date as Date);
+                      setOpenPopoverId(null);
+                    }}
+                    disabled={!date}
+                  >
+                    Save
+                  </Button>
                 </PopoverContent>
               </Popover>
             </TableCell>
