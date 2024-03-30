@@ -8,7 +8,7 @@ import { getProjectByName } from "@/server/actions/getProject";
 export default async function Page({ params }: { params: { name: string } }) {
   const project = await getProjectByName(decodeURIComponent(params.name));
 
-  const newTaskWithProjectId = newTask.bind(null, params.name);
+  const newTaskWithProjectName = newTask.bind(null, params.name);
 
   const tasks = await getTasksByProjectName(params.name);
 
@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { name: string } }) {
       <div className="grid grid-cols-4 gap-4">
         <div>{project.name}</div>
 
-        <NewTaskForm formAction={newTaskWithProjectId} />
+        <NewTaskForm formAction={newTaskWithProjectName} />
       </div>
 
       <TaskTable tasks={tasks} projectName={params.name} />
