@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 export const newProjectRequest = z.object({
-  projectName: z.string().min(1).max(48),
+  projectName: z.string().min(1).max(48).regex(/^[a-zA-Z0-9-]+$/, {
+    message: "アルファベット、数字、ハイフンのみ使用できます",
+  }),
 })
 
 export const newTaskRequest = z.object({
