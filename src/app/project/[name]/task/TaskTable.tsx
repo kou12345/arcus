@@ -25,7 +25,7 @@ import { useCallback, useMemo, useState } from "react";
 
 type Props = {
   tasks: Task[];
-  projectId: string;
+  projectName: string;
 };
 
 export const TaskTable = (props: Props) => {
@@ -50,9 +50,9 @@ export const TaskTable = (props: Props) => {
 
   const onClick = useCallback(
     (taskId: string) => {
-      router.push(`/project/${props.projectId}/task/${taskId}`);
+      router.push(`/project/${props.projectName}/task/${taskId}`);
     },
-    [router, props.projectId]
+    [router, props.projectName]
   );
 
   const onOpenChange = useCallback(
@@ -89,7 +89,7 @@ export const TaskTable = (props: Props) => {
               className="font-medium cursor-pointer"
               onClick={() => onClick(task.id)}
             >
-              <Link href={`/project/${props.projectId}/task/${task.id}`}>
+              <Link href={`/project/${props.projectName}/task/${task.id}`}>
                 {task.name}
               </Link>
             </TableCell>

@@ -1,25 +1,31 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { newProject } from "@/server/actions/newProject";
+"use client";
 
-export default async function Page() {
+import { CustomLabel } from "@/components/CustomLabel";
+import { ProjectNameInput } from "@/components/ProjectNameInput";
+import { Button } from "@/components/ui/button";
+import { useBooleanState } from "@/hooks/useBooleanState";
+import { newProject } from "@/server/actions/newProject";
+import { useFormState } from "react-dom";
+
+export default function Page() {
+  const [state, formAction] = useFormState(newProject, {});
+  // submitを押せるかどうかの判定
+  const [isSubmitEnabled, setIsSubmitEnabled] = useBooleanState(false);
+
   return (
     <div>
-      <div>New Project</div>
-      <form action={newProject}>
+      <p className="mb-4">New Project</p>
+      <form action={formAction}>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="project_name">Project Name</Label>
-          <Input
-            type="text"
-            id="project_name"
-            name="project_name"
-            placeholder="Project Name"
-          />
+          <CustomLabel htmlFor="project_name" required />
+          <ProjectNameInput setIsSubmitEnabled={setIsSubmitEnabled} />
         </div>
 
-        <Button type="submit">Create Project</Button>
+        <Button type="submit" disabled={!isSubmitEnabled}>
+          Create Project
+        </Button>
       </form>
+      {state.error && <p className="text-red-600">{state.error}</p>}
     </div>
   );
 }

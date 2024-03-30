@@ -3,17 +3,18 @@
 import { z } from "zod";
 import { db } from "../db";
 
-export const getProjectById = async (id: string) => {
+export const getProjectByName = async (name: string) => {
+  console.log("getProjectByName", name)
 
-  const validate = z.string().uuid().safeParse(id);
+  const validate = z.string().safeParse(name);
   if (!validate.success) {
-    throw new Error("ERROR: Invalid project id");
+    throw new Error("ERROR: Invalid project name");
   }
 
   try {
     const project = await db.project.findUnique({
       where: {
-        id: validate.data,
+        name: validate.data,
       },
     });
 
