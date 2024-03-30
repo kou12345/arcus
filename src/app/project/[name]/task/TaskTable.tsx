@@ -99,9 +99,7 @@ export const TaskTable = (props: Props) => {
                 onOpenChange={(open) => onOpenChange(open, task.id)}
               >
                 <PopoverTrigger>
-                  {task.dueDate
-                    ? formatDate(task.dueDate, "M/d")
-                    : "No deadline"}
+                  {task.dueDate ? formatDueDate(task.dueDate) : "No deadline"}
                 </PopoverTrigger>
                 <PopoverContent className="flex items-center">
                   <DatePickerWithPresets date={date} setDate={setDate} />
@@ -124,4 +122,13 @@ export const TaskTable = (props: Props) => {
       </TableBody>
     </Table>
   );
+};
+
+// dueDateが今日を過ぎている場合は赤文字にする
+const formatDueDate = (dueDate: Date) => {
+  if (dueDate.getTime() < new Date().getTime()) {
+    return <span className="text-red-500">{formatDate(dueDate, "M/d")}</span>;
+  }
+
+  return formatDate(dueDate, "M/d");
 };
