@@ -1,6 +1,6 @@
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React from "react";
 import { Skeleton } from "./ui/skeleton";
 
 export const Header = () => {
