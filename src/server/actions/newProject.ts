@@ -4,23 +4,27 @@ import { newProjectRequest } from "@/types/type";
 import { db } from "../db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/server";
 import { getAuthenticatedUser } from "../utils/auth";
 
-export const newProject = async (formData: FormData) => {
+type State = {
+  error?: string;
+}
 
-  // ログイン
+export const newProject = async (prevState: State, formData: FormData) => {
+
   const user = await getAuthenticatedUser();
 
   const validate = newProjectRequest.safeParse({ projectName: formData.get("project_name") });
   if (!validate.success) {
-    throw new Error("Invalid form data");
+    console.error(validate.error);
+    return { error: validate.error.message };
   }
 
   // 同名のプロジェクトがあるか確認
   const isExist = await isExistProject(validate.data.projectName);
   if (isExist) {
-    throw new Error("ERROR: Project already exists");
+    console.error("ERROR: Project already exists");
+    return { error: "このプロジェクト名はすでに利用されています" };
   }
 
   const project = await createProject({
@@ -30,6 +34,7 @@ export const newProject = async (formData: FormData) => {
 
   revalidatePath("/new");
   redirect(`/project/${project.id}`);
+  return {};
 }
 
 const createProject = async ({
